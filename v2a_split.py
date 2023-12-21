@@ -7,11 +7,12 @@ def split_audio(audio_file):
 
     # 元のファイルのディレクトリを取得
     base_dir = os.path.dirname(audio_file)
+    filename = os.path.splitext(audio_file)[0]
 
     # 同じディレクトリ内の既存の分割ファイルを削除する
-    for filename in glob.glob(os.path.join(base_dir, 'overlapping_segment*.mp3')):
-        os.remove(filename)
-        print(f"Deleted existing file: {filename}")
+    for file in glob.glob(os.path.join(base_dir, f'{filename}_segment*.mp3')):
+        os.remove(file)
+        print(f"Deleted existing file: {file}")
 
     # 音声ファイルの読み込み
     audio = AudioSegment.from_file(audio_file)
@@ -42,7 +43,7 @@ def split_audio(audio_file):
 
     # 重複セグメントをファイルに保存
     for i, segment in enumerate(overlapping_segments):
-        segment_file_path = os.path.join(base_dir, f'overlapping_segment_{i+1}.mp3')  # 保存するファイル名
+        segment_file_path = os.path.join(base_dir, f'{filename}_segment_{i+1}.mp3')  # 保存するファイル名
         segment.export(segment_file_path, format="mp3")
         print(f"Segment {i+1} saved as {segment_file_path}")
 

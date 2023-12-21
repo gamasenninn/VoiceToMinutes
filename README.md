@@ -20,12 +20,11 @@ VoiceToMinutesは、動画または、音声録音をより扱いやすいテキ
 ### 使用方法
 プロジェクト内の各スクリプトは、要件に応じて独立して実行できます。
 
-#### オーディオからテキストへの変換
 #### オーディオ分割
 ```bash
 python v2a_split.py <audio_file_path>
 ```
-
+#### オーディオからテキストへの変換
 ```bash
 python a2txt.py <audio_file_path>
 ```

@@ -2,6 +2,8 @@ import openai
 import sys
 import os
 from dotenv import load_dotenv
+import glob
+
 
 # OpenAI APIキーを設定
 load_dotenv()
@@ -135,7 +137,8 @@ if __name__ == "__main__":
         filename = input("ファイル名を入力してください:").strip()
 
     #print("文字起こしを開始します・・・・・\n")
-
-    v2txt_sum(filename)
+    for file in glob.glob(filename):
+        print(file)
+        v2txt_sum(file)
 
     input("\nなにかキーを押してください終了します:")

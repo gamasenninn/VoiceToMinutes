@@ -28,7 +28,7 @@ python v2a_split.py <audio_file_path>
 ```bash
 python a2txt.py <audio_file_path>
 ```
-
+※ ワイルドカードによる一括変換も可能です。
 #### 議事録作成
 ```bash
 python make_minutes.py <text_data_directory>

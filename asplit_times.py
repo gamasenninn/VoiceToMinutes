@@ -3,7 +3,7 @@ from pydub import AudioSegment
 import glob
 import os
 
-def split_audio(audio_file, split_times):
+def split_audio_times(audio_file, split_times):
     """
     audio_file: 分割するオーディオファイルのパス
     split_times: 分割する時間点のリスト (形式: ["1:30:00", "3:50:05", ...])
@@ -50,4 +50,4 @@ if __name__ == "__main__":
     split_times = sys.argv[2:]
 
     # 音声ファイルの分割
-    split_audio(input_audio_file, split_times)
+    split_audio_times(input_audio_file, split_times)

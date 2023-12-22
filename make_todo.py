@@ -4,8 +4,6 @@ import os
 import json
 from dotenv import load_dotenv
 
-
-# OpenAI APIキーを設定
 load_dotenv()
 REPLACEMENT_DICT  = os.environ["REPLACEMENT_DICT"]
 
@@ -28,7 +26,7 @@ def make_todo(dir_path):
     print(files)
     output_file =  os.path.join(dir_path, "todo.txt")
 
-        # 読み替え辞書をファイルから読み込む
+    # 読み替え辞書をファイルから読み込む
     replacement_dict = load_replacement_dict(REPLACEMENT_DICT)
 
     # ファイルを最初に上書きモードで開き、空にする

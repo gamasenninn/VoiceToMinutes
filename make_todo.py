@@ -2,6 +2,12 @@ import sys
 import glob
 import os
 import json
+from dotenv import load_dotenv
+
+
+# OpenAI APIキーを設定
+load_dotenv()
+REPLACEMENT_DICT  = os.environ["REPLACEMENT_DICT"]
 
 def load_replacement_dict(file_path):
     replacement_dict = {}
@@ -23,7 +29,7 @@ def make_todo(dir_path):
     output_file =  os.path.join(dir_path, "todo.txt")
 
         # 読み替え辞書をファイルから読み込む
-    replacement_dict = load_replacement_dict("replacement_dict.txt")
+    replacement_dict = load_replacement_dict(REPLACEMENT_DICT)
 
     # ファイルを最初に上書きモードで開き、空にする
     open(output_file, 'w', encoding='utf-8').close()

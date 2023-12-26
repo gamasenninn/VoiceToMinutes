@@ -42,7 +42,7 @@ def split_audio_times(audio_file, split_times):
 if __name__ == "__main__":
     # コマンドライン引数のチェック
     if len(sys.argv) < 3:
-        print("Usage: python script.py <audio_file> <split_time1> [<split_time2> ...]")
+        print("Usage: python asplit_times.py <audio_file> <split_time1> [<split_time2> ...]")
         sys.exit(1)
 
     # コマンドライン引数から音声ファイル名と分割時間を取得

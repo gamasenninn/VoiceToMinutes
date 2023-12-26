@@ -35,9 +35,13 @@ def make_minutes(dir_path):
     for file in files:
         with open(file, 'r', encoding='utf-8') as f:
             data = json.load(f)
-            combined_minutes = ["## {}:\n {}\n".format(replace_words(item['title'], replacement_dict), 
-                                replace_words(item['content'],replacement_dict)) for item in data['minutes']]
+            #combined_minutes = ["## {}:\n {}\n".format(replace_words(item['title'], replacement_dict), 
+            #                    replace_words(item['content'],replacement_dict)) for item in data['minutes']]
             
+            combined_minutes = ["## {}:\n{}\n".format(replace_words(item['title'], replacement_dict), 
+                                        replace_words('\n'.join(item['content']), replacement_dict)) for item in data['minutes']]
+
+
             # この時点でファイルを追記モードで開く
             with open(output_file, 'a', encoding='utf-8') as out_file:
                 for minute in combined_minutes:

@@ -59,20 +59,21 @@ def transcribe_audio(filename):
    
     with open(filename, "rb") as file:
         params ={
-            "response_format" : "text",
+            "response_format" : "vtt",
             "temperature" : 0, 
             "language" : "ja" ,
             "prompt": 
                 "句読点や読点を付与してください。"
         }
         transcription = openai.Audio.transcribe("whisper-1", file, **params)
-        #print("trans:",transcription)
+        print("trans:",transcription)
         #return transcription.text
         return transcription
 
 def summarize_text(text):
     response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo-1106",
+            #model="gpt-4-1106-preview",
             response_format={ "type": "json_object" },
             messages=[
                 {
@@ -82,8 +83,10 @@ def summarize_text(text):
                                 "出力は純粋な配列のJSON形式でお願いします。" 
                                 "{minutes:["
                                     "{"
-                                        "title:タイトル（20文字以内で内容に最も適したタイトル）\n" 
-                                        "content:内容(要約し400字以内とします)" 
+                                        "title:タイトル（20文字以内で内容に最も適したタイトル）,\n" 
+                                        "content:内容(要点や決定事項を箇条書きにしてください),\n" 
+                                        "times:この議題の開始時間00:00:00-終了時間00:00:00\n" 
+
                                     "},"
                                 "]}"
                 },
@@ -141,4 +144,4 @@ if __name__ == "__main__":
         print(file)
         v2txt_sum(file)
 
-    input("\nなにかキーを押してください終了します:")
+    #input("\nなにかキーを押してください終了します:")

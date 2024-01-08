@@ -43,7 +43,7 @@ def split_audio(audio_file):
 
     # 重複セグメントをファイルに保存
     for i, segment in enumerate(overlapping_segments):
-        segment_file_path = os.path.join(base_dir, f'{filename}_segment_{i+1}.mp3')  # 保存するファイル名
+        segment_file_path = os.path.join(base_dir, f'{filename}_segment_{i+1:02d}.mp3')  # 保存するファイル名
         segment.export(segment_file_path, format="mp3")
         print(f"Segment {i+1} saved as {segment_file_path}")
 

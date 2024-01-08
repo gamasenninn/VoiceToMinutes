@@ -34,7 +34,7 @@ def split_audio_times(audio_file, split_times):
     start_ms = 0
     for i, end_ms in enumerate(split_points_ms):
         segment = audio[start_ms:end_ms]
-        segment_file_path = os.path.join(base_dir, f'{filename}_segment_{i+1}.mp3')  # 保存するファイル名
+        segment_file_path = os.path.join(base_dir, f'{filename}_segment_{i+1:02d}.mp3')  # 保存するファイル名
         segment.export(segment_file_path, format="mp3")
         print(f"Segment {i+1} saved as {segment_file_path}")
         start_ms = end_ms  # 次のセグメントの開始点を更新

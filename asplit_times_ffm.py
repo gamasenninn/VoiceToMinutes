@@ -20,7 +20,7 @@ def split_audio_times(audio_file, split_times):
     # 分割処理
     previous_time = "0:0:0"
     for i, split_time in enumerate(split_times, 1):
-        segment_file_path = os.path.join(base_dir, f'{filename}_segment_{i}.mp3')
+        segment_file_path = os.path.join(base_dir, f'{filename}_segment_{i:02d}.mp3')
         #subprocess.run(["ffmpeg", "-i", audio_file, "-map", "0:a:0","-ss", previous_time, "-to", split_time, "-c", "copy", 
         # segment_file_path])
         subprocess.run([

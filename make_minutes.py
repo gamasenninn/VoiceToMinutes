@@ -26,10 +26,10 @@ def format_minute_item(item, replacement_dict):
 
     # 'content' がリストの場合は結合して文字列にする
     if isinstance(item['contents'], list):
-        content_str = '\n'.join(item['contents'])
+        content_str = '- ' + '\n- '.join(item['contents'])
     else:
         # 'content' がリストでない場合（例えば、文字列の場合）はそのまま使用
-        content_str = item['contents']
+        content_str = '- '+item['contents']
 
     replaced_content = replace_words(content_str, replacement_dict)
 

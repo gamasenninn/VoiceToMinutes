@@ -19,10 +19,10 @@ def split_audio(audio_file):
 
     # 各セグメントの持続時間（1分 = 60,000ミリ秒）
     #segment_duration_ms = 60000
-    segment_duration_ms = 5*60000
+    segment_duration_ms = 3*60000
 
     # 重複する持続時間（例：5秒 = 5000ミリ秒）
-    overlap_duration_ms = 5000
+    overlap_duration_ms = 10000
 
     # オーディオの全長（ミリ秒）
     original_audio_length_ms = len(audio)

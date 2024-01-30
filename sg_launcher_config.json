@@ -1,0 +1,34 @@
+{
+    "audio split by ffmpeg": {
+        "command": "python asplit_times_ffm.py",
+        "params": "",
+        "description": "画像を音声に分割する<ファァイル名> <時間リスト>"
+    },
+    "audio split by time": {
+        "command": "python asplit.py",
+        "params": "",
+        "description": "画像を音声に分単位で分割する<ファァイル名> <時間(分)"
+    },
+    "audio to text,json": {
+        "command": "python a2txt.py",
+        "params": "",
+        "description": "LLMでファイルをテキストとJSONに変換する<ファイル名*>"
+    },
+    "make minutes": {
+        "command": "python make_minutes.py",
+        "params": "",
+        "description": "議事録を作成する<ディレクトリ名>"
+    },
+    "dir list": {
+        "command": "cmd.exe /c dir",
+        "params": "",
+        "description": "ディレクトリリスト"
+    },
+    "Setting Edit": {
+        "command": "notepad",
+        "params": "sg_launcher_config.json",
+        "params_allow_input": false,
+        "description": "コマンド設定を編集",
+        "wait": false
+    }
+}

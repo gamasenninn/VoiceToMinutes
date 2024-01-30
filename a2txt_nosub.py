@@ -9,8 +9,6 @@ import glob
 load_dotenv()
 openai.api_key = os.environ["OPEN_API_KEY"]
 
-past_summaries = []
-
 # 文字起こしファイル関連処理
 def check_transcription_file_exists(file_path):
     # 元のファイル名から拡張子を除外し、.txtファイルのパスを作成
@@ -56,7 +54,7 @@ def save_summrize_to_file(sum_text, original_file_path):
     with open(new_file_path, "w", encoding="utf-8") as text_file:
         text_file.write(sum_text)
 
-# 要約処理（openai API）
+# 文字起こし（openai API）
 def transcribe_audio(filename):
    
     with open(filename, "rb") as file:
@@ -72,48 +70,6 @@ def transcribe_audio(filename):
         #return transcription.text
         return transcription
 
-def summarize_text(text):
-    # 最後の2つの要約を取得
-    past_summaries_lasts = past_summaries[-2:] if len(past_summaries) >= 2 else past_summaries
-
-    # 過去の要約をテキストに結合
-    past_summaries_text = "前回までの要約:\n" + "\n".join(past_summaries_lasts)
-    past_summaries_text += "\n\n最新のテキスト:\n" + text
-
-    print(past_summaries_text)
-
-    response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo-1106",
-            #model="gpt-4-1106-preview",
-            response_format={ "type": "json_object" },
-            messages=[
-                {
-                    "role": "system",
-                    "content": "議事録の下書きを作成してください。"
-                                "議事録ですのでタイトルと内容をセットにしてそれごとに複数書いてください"
-                                "またユーザの前回までの要約を参考にしてください。"
-                                "出力は純粋な配列のJSON形式でお願いします。" 
-                                "{minutes:["
-                                    "{"
-                                        "title:タイトル（20文字以内で内容に最も適したタイトル）,\n" 
-                                        "contents:[内容(具体的な詳細内容や決定事項、売上や買掛の数字などに注目して箇条書きにしてください)],\n" 
-                                        "times:この議題の開始時間00:00:00-終了時間00:00:00\n" 
-
-                                    "},"
-                                "]}"
-                },
-                {
-                    "role": "user",
-                    "content": text
-                }
-            ],
-        )
-
-    # 要約されたテキストを取得
-    new_summary = response.choices[0].message.content.strip()
-    past_summaries.append(new_summary)
-
-    return new_summary
 
 # 文字起こし->要約の一連の流れ（主処理）
 def v2txt_sum(filename):
@@ -140,10 +96,10 @@ def v2txt_sum(filename):
 
     # 要約処理
     #if not check_summrize_file_exists(filename): #文字起こしファイルがなかったら
-    print("議事要約を開始します")
-    sum_txt = summarize_text(transcription_text)
-    print(sum_txt)
-    save_summrize_to_file(sum_txt, filename)
+    #print("議事要約を開始します")
+    #sum_txt = summarize_text(transcription_text)
+    #print(sum_txt)
+    #save_summrize_to_file(sum_txt, filename)
 
 
 if __name__ == "__main__":
@@ -157,11 +113,5 @@ if __name__ == "__main__":
     for file in glob.glob(filename):
         print(file)
         v2txt_sum(file)
-
-     # 文字起こし結果をファイルに保存
-    with open("test_sum.txt", "w", encoding="utf-8") as text_file:
-        for past_txt in past_summaries:
-            text_file.write(past_txt)  
-
 
     #input("\nなにかキーを押してください終了します:")

@@ -21,6 +21,21 @@ def replace_words(text, replacement_dict):
         text = text.replace(word, replacement)
     return text
 
+def format_minute_item(item, replacement_dict):
+    replaced_title = replace_words(item['title'], replacement_dict)
+
+    # 'content' がリストの場合は結合して文字列にする
+    if isinstance(item['contents'], list):
+        content_str = '\n'.join(item['contents'])
+    else:
+        # 'content' がリストでない場合（例えば、文字列の場合）はそのまま使用
+        content_str = item['contents']
+
+    replaced_content = replace_words(content_str, replacement_dict)
+
+    return "## {}:\n{}\n".format(replaced_title, replaced_content)
+
+
 def make_minutes(dir_path):
     files = glob.glob(os.path.join(dir_path, "*.json"))
     output_file =  os.path.join(dir_path, "summary.txt")
@@ -35,22 +50,14 @@ def make_minutes(dir_path):
     for file in files:
         with open(file, 'r', encoding='utf-8') as f:
             data = json.load(f)
-            #combined_minutes = ["## {}:\n {}\n".format(replace_words(item['title'], replacement_dict), 
-            #                    replace_words(item['content'],replacement_dict)) for item in data['minutes']]
-            
-            combined_minutes = ["## {}:\n{}\n".format(replace_words(item['title'], replacement_dict), 
-                                        replace_words('\n'.join(item['content']), replacement_dict)) for item in data['minutes']]
-
+            combined_minutes = [format_minute_item(item, replacement_dict) for item in data['minutes']]                         
 
             # この時点でファイルを追記モードで開く
             with open(output_file, 'a', encoding='utf-8') as out_file:
                 for minute in combined_minutes:
                     print(minute)
                     out_file.write(minute + "\n")
-                      
-
-
-
+                   
 if __name__ == "__main__":
     # コマンドライン引数のチェック
     if len(sys.argv) != 2:
@@ -61,5 +68,4 @@ if __name__ == "__main__":
     dir_path = sys.argv[1]
 
     # 
-
     make_minutes(dir_path)

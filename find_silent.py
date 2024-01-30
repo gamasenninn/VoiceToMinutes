@@ -63,7 +63,15 @@ if __name__ == '__main__':
     else:
         audio_path = sys.argv[1]
         silences = detect_silence(audio_path)
+        end_list = []
         for start, end in silences:
             formatted_start = format_time(start)
             formatted_end = format_time(end)
             print(f"Silence from {formatted_start} - {formatted_end}")
+            end_list.append(formatted_end)
+
+    command_param = ""
+    for p in end_list:
+        command_param += p+" "
+
+    print(command_param)

@@ -38,6 +38,8 @@ def format_minute_item(item, replacement_dict):
 
 def make_minutes(dir_path):
     files = glob.glob(os.path.join(dir_path, "*.json"))
+        # ファイル名でリストを並べ替え
+    files = sorted(files)
     output_file =  os.path.join(dir_path, "summary.txt")
 
     # 読み替え辞書をファイルから読み込む

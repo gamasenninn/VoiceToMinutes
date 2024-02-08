@@ -1,9 +1,13 @@
 import sys
+import argparse
 from pydub import AudioSegment
 import glob
 import os
 
-def split_audio(audio_file):
+def split_audio(audio_file, segment_duration_min):
+
+    # 分をミリ秒に変換
+    segment_duration_ms = int(segment_duration_min * 60 * 1000)
 
     # 元のファイルのディレクトリを取得
     base_dir = os.path.dirname(audio_file)
@@ -17,17 +21,13 @@ def split_audio(audio_file):
     # 音声ファイルの読み込み
     audio = AudioSegment.from_file(audio_file)
 
-    # 各セグメントの持続時間（1分 = 60,000ミリ秒）
-    #segment_duration_ms = 60000
-    segment_duration_ms = 2*60000
-
     # 重複する持続時間（例：5秒 = 5000ミリ秒）
-    overlap_duration_ms = 10000
+    overlap_duration_ms = 5000
 
     # オーディオの全長（ミリ秒）
     original_audio_length_ms = len(audio)
 
-    # 重複を含む1分間隔でオーディオを分割
+    # 重複を含むセグメントでオーディオを分割
     overlapping_segments = []
 
     for start_ms in range(0, original_audio_length_ms, segment_duration_ms):
@@ -48,14 +48,11 @@ def split_audio(audio_file):
         print(f"Segment {i+1} saved as {segment_file_path}")
 
 if __name__ == "__main__":
-    # コマンドライン引数のチェック
-    if len(sys.argv) != 2:
-        print("Usage: python script.py <audio_file>")
-        sys.exit(1)
-
-    # コマンドライン引数から音声ファイル名を取得
-    input_audio_file = sys.argv[1]
+    # コマンドライン引数の解析
+    parser = argparse.ArgumentParser(description='Split an audio file into segments.')
+    parser.add_argument('audio_file', type=str, help='The audio file to split.')
+    parser.add_argument('--sptime', type=float, default=2, help='Duration of each segment in minutes (can be a decimal).')
+    args = parser.parse_args()
 
     # 音声ファイルの分割
-
-    split_audio(input_audio_file)
+    split_audio(args.audio_file, args.sptime)

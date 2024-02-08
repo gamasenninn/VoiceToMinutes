@@ -2,6 +2,7 @@ import subprocess
 import sys
 import os
 import glob
+import argparse
 
 def get_audio_length(audio_file):
     """
@@ -14,9 +15,9 @@ def get_audio_length(audio_file):
     duration = float(result.stdout)
     return duration
 
-def generate_split_times(total_seconds, interval=120):
+def generate_split_times(total_seconds, interval):
     """
-    2分間隔で分割する時間点のリストを生成する。
+    指定された間隔で分割する時間点のリストを生成する。
     """
     times = []
     current_time = interval
@@ -25,7 +26,7 @@ def generate_split_times(total_seconds, interval=120):
         current_time += interval
     return times
 
-def split_audio_intervals(audio_file, interval=120):
+def split_audio_intervals(audio_file, interval):
     """
     audio_file: 分割するオーディオファイルのパス
     interval: 分割する時間間隔 (秒)
@@ -70,10 +71,10 @@ def split_audio_intervals(audio_file, interval=120):
         print(f"Segment {i+1} saved as {segment_file_path}")
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print("Usage: python script.py <audio_file>")
-        sys.exit(1)
+    parser = argparse.ArgumentParser(description='Split an audio file into intervals.')
+    parser.add_argument('audio_file', type=str, help='The audio file to split.')
+    parser.add_argument('--sptime', type=float, default=2.0, help='Duration of each segment in minutes (can be a decimal).')
+    args = parser.parse_args()
 
-    input_audio_file = sys.argv[1]
-
-    split_audio_intervals(input_audio_file)
+    interval_seconds = args.sptime * 60  # 分を秒に変換
+    split_audio_intervals(args.audio_file, interval_seconds)

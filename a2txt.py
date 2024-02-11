@@ -3,6 +3,7 @@ import sys
 import os
 from dotenv import load_dotenv
 import glob
+import argparse
 
 
 # OpenAI APIキーを設定
@@ -115,7 +116,7 @@ def summarize_text(text):
     return new_summary
 
 # 文字起こし->要約の一連の流れ（主処理）
-def v2txt_sum(filename):
+def v2txt_sum(filename, skip_summary=False):
 
     transcription_text = ""
     if check_transcription_file_exists(filename):
@@ -139,23 +140,42 @@ def v2txt_sum(filename):
 
     # 要約処理
     #if not check_summrize_file_exists(filename): #文字起こしファイルがなかったら
-    print("議事要約を開始します")
-    sum_txt = summarize_text(transcription_text)
-    print(sum_txt)
-    save_summrize_to_file(sum_txt, filename)
+    if not skip_summary:
+        print("議事要約を開始します")
+        sum_txt = summarize_text(transcription_text)
+        print(sum_txt)
+        save_summrize_to_file(sum_txt, filename)
 
 
+# コマンドライン引数の解析と説明
+def parse_arguments():
+    parser = argparse.ArgumentParser(
+        description='音声ファイルをテキストに文字起こしし、要約するスクリプト。\n'
+                    'OpenAIのWhisperとGPTモデルを使用。',
+        formatter_class=argparse.RawTextHelpFormatter
+    )
+    parser.add_argument(
+        'file',
+        help='処理する音声ファイルのパス。\n'
+             'ワイルドカード（*）を使用して複数のファイルを一括で処理できます。'
+    )
+    parser.add_argument(
+        '--nosum',
+        action='store_true',
+        help='このオプションを指定すると、要約処理をスキップします。'
+    )
+    return parser.parse_args()
 if __name__ == "__main__":
-    # コマンドライン引数または標準入力からファイル名を取得
-    if len(sys.argv) > 1:
-        filename = sys.argv[1]
-    else:
-        filename = input("ファイル名を入力してください:").strip()
+    args = parse_arguments()
+
+    # コマンドライン引数からファイル名と要約スキップフラグを取得
+    filename = args.file
+    skip_summary = args.nosum
 
     #print("文字起こしを開始します・・・・・\n")
     for file in glob.glob(filename):
         print(file)
-        v2txt_sum(file)
+        v2txt_sum(file, skip_summary=skip_summary)
 
      # 文字起こし結果をファイルに保存
     with open("test_sum.txt", "w", encoding="utf-8") as text_file:

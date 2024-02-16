@@ -159,7 +159,7 @@ def parse_arguments():
     )
     parser.add_argument(
         'file',
-        help='処理する音声ファイルのパス。\n'
+        help='処理する音声ファイルのパス(mp3)。\n'
              'ワイルドカード（*）を使用して複数のファイルを一括で処理できます。'
     )
     parser.add_argument(

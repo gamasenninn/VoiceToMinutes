@@ -4,12 +4,14 @@ import os
 from dotenv import load_dotenv
 import glob
 import argparse
+from replace_text import load_replacement_dict,replace_words
 
 
 # OpenAI APIキーを設定
 load_dotenv()
 openai.api_key = os.environ["OPEN_API_KEY"]
-
+replacement_dict_path = os.environ.get("REPLACEMENT_DICT")
+replacement_dict = load_replacement_dict(replacement_dict_path)
 past_summaries = []
 
 # 文字起こしファイル関連処理
@@ -142,7 +144,8 @@ def v2txt_sum(filename, skip_summary=False):
     #if not check_summrize_file_exists(filename): #文字起こしファイルがなかったら
     if not skip_summary:
         print("議事要約を開始します")
-        sum_txt = summarize_text(transcription_text)
+        replaced_transcription_text = replace_words(transcription_text, replacement_dict)
+        sum_txt = summarize_text(replaced_transcription_text)
         print(sum_txt)
         save_summrize_to_file(sum_txt, filename)
 

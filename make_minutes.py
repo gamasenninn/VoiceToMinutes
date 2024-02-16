@@ -3,23 +3,12 @@ import glob
 import os
 import json
 from dotenv import load_dotenv
+from replace_text import load_replacement_dict,replace_words
+import re
 
 load_dotenv()
 REPLACEMENT_DICT  = os.environ["REPLACEMENT_DICT"]
-
-def load_replacement_dict(file_path):
-    replacement_dict = {}
-    with open(file_path, 'r', encoding='utf-8') as file:
-        for line in file:
-            parts = line.strip().split(':')
-            if len(parts) == 2:
-                replacement_dict[parts[0]] = parts[1]
-    return replacement_dict
-
-def replace_words(text, replacement_dict):
-    for word, replacement in replacement_dict.items():
-        text = text.replace(word, replacement)
-    return text
+title = "議事録（AI自動起草）\n"
 
 def format_minute_item(item, replacement_dict):
     replaced_title = replace_words(item['title'], replacement_dict)
@@ -45,20 +34,33 @@ def make_minutes(dir_path):
     # 読み替え辞書をファイルから読み込む
     replacement_dict = load_replacement_dict(REPLACEMENT_DICT)
 
+  # 正規表現で日付部分を抽出（yyyy_mm_dd形式）
+    match = re.search(r'(\d{4})_(\d{2})_(\d{2})', dir_path)
+    if match:
+        year, month, day = match.groups()
+        formatted_date = f"{year}年{int(month)}月{int(day)}日"
+        print(formatted_date)
+    else:
+        print("日付形式が見つかりません。")  
+        return False
+
     # ファイルを最初に上書きモードで開き、空にする
     open(output_file, 'w', encoding='utf-8').close()
 
     # 各ファイルを読み込み、出力ファイルに追記
-    for file in files:
+    for i,file in enumerate(files):
         with open(file, 'r', encoding='utf-8') as f:
             data = json.load(f)
             combined_minutes = [format_minute_item(item, replacement_dict) for item in data['minutes']]                         
 
             # この時点でファイルを追記モードで開く
             with open(output_file, 'a', encoding='utf-8') as out_file:
+                if i==0:
+                    out_file.write(f"# {formatted_date} {title} \n")    
                 for minute in combined_minutes:
-                    print(minute)
+                    print(i,minute)
                     out_file.write(minute + "\n")
+    return True
                    
 if __name__ == "__main__":
     # コマンドライン引数のチェック
@@ -70,4 +72,5 @@ if __name__ == "__main__":
     dir_path = sys.argv[1]
 
     # 
-    make_minutes(dir_path)
+    if make_minutes(dir_path):
+        print("議事録を作成しました。")

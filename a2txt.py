@@ -59,7 +59,7 @@ def save_summrize_to_file(sum_text, original_file_path):
     with open(new_file_path, "w", encoding="utf-8") as text_file:
         text_file.write(sum_text)
 
-# 要約処理（openai API）
+#文字起こし（openai API）
 def transcribe_audio(filename):
    
     with open(filename, "rb") as file:
@@ -75,6 +75,7 @@ def transcribe_audio(filename):
         #return transcription.text
         return transcription
 
+#要約処理（openai API）
 def summarize_text(text):
     # 最後の2つの要約を取得
     past_summaries_lasts = past_summaries[-2:] if len(past_summaries) >= 2 else past_summaries
@@ -85,9 +86,11 @@ def summarize_text(text):
 
     print(past_summaries_text)
 
+    
+
     response = openai.ChatCompletion.create(
-            #model="gpt-3.5-turbo-0125",  # gpt-3.5-turbo-1106からの変更
-            model="gpt-4-turbo-preview",
+            model="gpt-3.5-turbo-0125",  # gpt-3.5-turbo-1106からの変更
+            #model="gpt-4-turbo-preview",
             response_format={ "type": "json_object" },
             messages=[
                 {

@@ -26,7 +26,7 @@ def format_minute_item(item, replacement_dict):
 
 
 def make_minutes(dir_path):
-    files = glob.glob(os.path.join(dir_path, "*.json"))
+    files = glob.glob(os.path.join(dir_path, "*_segment_*.json"))
         # ファイル名でリストを並べ替え
     files = sorted(files)
     output_file =  os.path.join(dir_path, "summary.txt")
@@ -49,6 +49,7 @@ def make_minutes(dir_path):
 
     # 各ファイルを読み込み、出力ファイルに追記
     for i,file in enumerate(files):
+        print(file)
         with open(file, 'r', encoding='utf-8') as f:
             data = json.load(f)
             combined_minutes = [format_minute_item(item, replacement_dict) for item in data['minutes']]                         

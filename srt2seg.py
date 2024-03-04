@@ -17,20 +17,19 @@ def make_part(text):
  
 
     response = openai.ChatCompletion.create(
-            #model="gpt-3.5-turbo-0125",  # gpt-3.5-turbo-1106からの変更
-            model="gpt-4-turbo-preview",
+            model="gpt-3.5-turbo-0125",  # gpt-3.5-turbo-1106からの変更
+            #model="gpt-4-turbo-preview",
             response_format={ "type": "json_object" },
             messages=[
                 {
                     "role": "system",
                     "content": "次の記録から議事録を起こしていきます。"
-                                "議事の流れの中で、内容的に区切れる部分を探し、10以上のパートを作りたいです。"
-                                "出力は純粋な配列のJSON形式でお願いします。" 
+                                "議事の流れの中で、内容的に区切れる部分を探し、連続した時間で20程度のパートに分割してください。記録を最後まで全部読んで最後の議事の最終時間になるまで出力してください。"
+                                "出力は下記のような配列としての純粋なJSON形式でお願いします。" 
                                 "{segments=[{"
                                     "title:タイトル（20文字以内で内容に最も適したタイトル）," 
-                                    "contents:[内容(具体的な詳細内容や決定事項、売上や買掛の数字などに注目して箇条書きにしてください)]," 
-                                    "start_times:この議題の開始時間00:00:00" 
-                                    "start_times:この議題の終了時間00:00:00," 
+                                    "start_time:この議題の開始時間(00:00:00)," 
+                                    "end_time:この議題の終了時間(00:00:00)" 
                                 "},]}"
                 },
                 {
@@ -49,13 +48,13 @@ def make_part(text):
 # コマンドライン引数の解析と説明
 def parse_arguments():
     parser = argparse.ArgumentParser(
-        description='音声ファイルをテキストに文字起こしし、要約するスクリプト。\n'
-                    'OpenAIのWhisperとGPTモデルを使用。',
+        description='SRTファイルからタイトルと時間を抽出する。\n'
+                    'OpenAIのGPTモデルを使用。',
         formatter_class=argparse.RawTextHelpFormatter
     )
     parser.add_argument(
         'file',
-        help='処理する音声ファイルのパス(mp3)。\n'
+        help='処理するSRTファイルのパス\n'
              'ワイルドカード（*）を使用して複数のファイルを一括で処理できます。'
     )
     parser.add_argument(
@@ -71,6 +70,14 @@ def read_srt_from_file(file_path):
     with open(file_path, "r", encoding="utf-8") as file:
         return file.read()
 
+def save_to_file(transcription, original_file_path):
+    # 元のファイル名から拡張子を除外し、新しいファイル名を作成
+    base_name = os.path.splitext(original_file_path)[0]
+    new_file_path = f"{base_name}_time.json"
+
+    # 文字起こし結果をファイルに保存
+    with open(new_file_path, "w", encoding="utf-8") as text_file:
+        text_file.write(transcription)
 
 if __name__ == "__main__":
     args = parse_arguments()
@@ -82,3 +89,4 @@ if __name__ == "__main__":
     srt_text = read_srt_from_file(filename)
     part = make_part(srt_text)
     print(part)
+    save_to_file(part,filename)

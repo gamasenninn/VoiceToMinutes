@@ -21,6 +21,7 @@ def read_file(file_path):
 
 def time_to_seconds(time_str):
     """Converts a time string to seconds."""
+    print(time_str)
     hours, minutes, seconds = map(float, time_str.replace(',', '.').split(':'))
     return hours * 3600 + minutes * 60 + seconds
 
@@ -55,8 +56,8 @@ def process_files(time_file_path, transcript_file_path):
     # Extracting segments
     extracted_segments = []
     for segment in time_file_data["segments"]:
-        start_time = segment["start_time"] + ",000"
-        end_time = segment["end_time"] + ",000"
+        start_time = segment["start_time"] 
+        end_time = segment["end_time"] 
         extracted_text = extract_segment(transcript_file_data, start_time, end_time)
         extracted_segments.append(
             {
@@ -72,8 +73,8 @@ def process_files(time_file_path, transcript_file_path):
 # コマンドライン引数の解析と説明
 def parse_arguments():
     parser = argparse.ArgumentParser(
-        description='音声ファイルをテキストに文字起こしし、要約するスクリプト。\n'
-                    'OpenAIのWhisperとGPTモデルを使用。',
+        description='セグメントファイルから時間を抽出し、要約処理を行う。\n'
+                    'OpenAIのGPTモデルを使用。',
         formatter_class=argparse.RawTextHelpFormatter
     )
     parser.add_argument(

@@ -12,6 +12,7 @@ title = "議事録（AI自動起草）\n"
 
 def format_minute_item(item, replacement_dict):
     replaced_title = replace_words(item['title'], replacement_dict)
+    time_str = item['times']
 
     # 'content' がリストの場合は結合して文字列にする
     if isinstance(item['contents'], list):
@@ -22,7 +23,7 @@ def format_minute_item(item, replacement_dict):
 
     replaced_content = replace_words(content_str, replacement_dict)
 
-    return "## {}:\n{}\n".format(replaced_title, replaced_content)
+    return "## {}:\n[{}]\n{}\n".format(replaced_title, time_str,replaced_content)
 
 
 def make_minutes(dir_path):

@@ -13,9 +13,18 @@ def load_replacement_dict(file_path):
     return replacement_dict
 
 def replace_words(text, replacement_dict):
+    # 新しいテキスト変数を作成
+    new_text = text
+
+    # 置換辞書を使用して単語を置換
     for word, replacement in replacement_dict.items():
-        text = text.replace(word, replacement)
-    return text
+        new_text = new_text.replace(word, replacement)
+
+    # 英小文字を英大文字に変換
+    new_text = new_text.upper()
+
+    # 最終的なテキストを返す
+    return new_text
 
 def process_files(dir_path, replacement_dict):
     files = glob.glob(os.path.join(dir_path, "*.txt"))

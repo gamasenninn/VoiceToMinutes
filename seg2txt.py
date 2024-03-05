@@ -21,7 +21,7 @@ def read_file(file_path):
 
 def time_to_seconds(time_str):
     """Converts a time string to seconds."""
-    print(time_str)
+    #print(time_str)
     hours, minutes, seconds = map(float, time_str.replace(',', '.').split(':'))
     return hours * 3600 + minutes * 60 + seconds
 
@@ -81,11 +81,11 @@ def parse_arguments():
         'transcript_file',
         help='処理するトランスクリプトファイルのパス(SRT)。'
     )
-    parser.add_argument(
-        '--nosum',
-        action='store_true',
-        help='このオプションを指定すると、要約処理をスキップします。'
-    )
+    #parser.add_argument(
+    #    '--nosum',
+    #    action='store_true',
+    #    help='このオプションを指定すると、要約処理をスキップします。'
+    #)
     return parser.parse_args()
 
 #要約処理（openai API）
@@ -142,10 +142,11 @@ if __name__ == "__main__":
         #pprint.pprint(segment.get("text"))
         out_file_path = f"{time_file_base}_segment_{i:02d}.json"
         transcription = summarize_text(segment.get("text"))
+        replaced_text = replace_words(transcription, replacement_dict)
         # 文字起こし結果をファイルに保存
         with open(out_file_path, "w", encoding="utf-8") as text_file:
-            print(transcription)
-            text_file.write(transcription)
+            print(replaced_text)
+            text_file.write(replaced_text)
 
         
 

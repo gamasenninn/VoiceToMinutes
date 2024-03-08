@@ -16,15 +16,17 @@ def format_minute_item(item, replacement_dict):
 
     # 'content' がリストの場合は結合して文字列にする
     if isinstance(item['contents'], list):
-        content_str = '- ' + '\n- '.join(item['contents'])
+        content_str = ' - ' + '\n - '.join(item['contents'])
     else:
         # 'content' がリストでない場合（例えば、文字列の場合）はそのまま使用
         content_str = '- '+item['contents']
 
+    content_str += f"\n【問題点】{item['problem']}" if item.get('problem') else ""
+    content_str += f"\n【TODO】{item['todo']}" if item.get('todo') else ""
+
     replaced_content = replace_words(content_str, replacement_dict)
 
-    return "## {}:\n[{}]\n{}\n".format(replaced_title, time_str,replaced_content)
-
+    return "## {}:\n[{}]\n【議事】\n{}\n".format(replaced_title, time_str,replaced_content)
 
 def make_minutes(dir_path):
     files = glob.glob(os.path.join(dir_path, "*_segment_*.json"))
@@ -76,3 +78,4 @@ if __name__ == "__main__":
     # 
     if make_minutes(dir_path):
         print("議事録を作成しました。")
+

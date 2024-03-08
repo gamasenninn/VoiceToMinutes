@@ -57,11 +57,11 @@ def parse_arguments():
         help='処理するSRTファイルのパス\n'
              'ワイルドカード（*）を使用して複数のファイルを一括で処理できます。'
     )
-    #parser.add_argument(
-    #    '--nosum',
-    #    action='store_true',
-    #    help='このオプションを指定すると、要約処理をスキップします。'
-    #)
+    parser.add_argument(
+        '--nosum',
+        action='store_true',
+        help='このオプションを指定すると、要約処理をスキップします。'
+    )
     return parser.parse_args()
 
 def read_srt_from_file(file_path):

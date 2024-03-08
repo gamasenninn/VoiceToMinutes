@@ -81,11 +81,11 @@ def parse_arguments():
         'transcript_file',
         help='処理するトランスクリプトファイルのパス(SRT)。'
     )
-    #parser.add_argument(
-    #    '--nosum',
-    #    action='store_true',
-    #    help='このオプションを指定すると、要約処理をスキップします。'
-    #)
+    parser.add_argument(
+        '--nosum',
+        action='store_true',
+        help='このオプションを指定すると、要約処理をスキップします。'
+    )
     return parser.parse_args()
 
 #要約処理（openai API）
@@ -105,8 +105,9 @@ def summarize_text(text):
                                     "{"
                                         "title:タイトル（20文字以内で内容に最も適したタイトル）,\n" 
                                         "contents:[内容(具体的な詳細内容や決定事項、売上や買掛の数字などに注目して箇条書きにしてください)],\n" 
-                                        "times:この議題の開始時間00:00:00-終了時間00:00:00\n" 
-
+                                        "times:この議題の開始時間00:00:00-終了時間00:00:00,\n" 
+                                        "problem:もし問題点があれば書く。ない場合は'',\n"
+                                        "todo: アクションが必要な場合は書く。ない場合は''\n"
                                     "},"
                                 "]}"
                 },
@@ -142,11 +143,11 @@ if __name__ == "__main__":
         #pprint.pprint(segment.get("text"))
         out_file_path = f"{time_file_base}_segment_{i:02d}.json"
         transcription = summarize_text(segment.get("text"))
-        replaced_text = replace_words(transcription, replacement_dict)
+        #replaced_text = replace_words(transcription, replacement_dict)
         # 文字起こし結果をファイルに保存
         with open(out_file_path, "w", encoding="utf-8") as text_file:
-            print(replaced_text)
-            text_file.write(replaced_text)
+            print(transcription)
+            text_file.write(transcription)
 
         
 

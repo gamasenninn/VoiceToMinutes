@@ -55,9 +55,17 @@ def process_files(time_file_path, transcript_file_path):
 
     # Extracting segments
     extracted_segments = []
-    for segment in time_file_data["segments"]:
+    num_segments = len(time_file_data["segments"])
+    #for segment in time_file_data["segments"]:
+    for i, segment in enumerate(time_file_data["segments"]):
         start_time = segment["start_time"] 
-        end_time = segment["end_time"] 
+        #end_time = segment["end_time"]
+        # Use next segment's start time as end time, except for the last segment
+        if i < num_segments - 1:
+            end_time = time_file_data["segments"][i + 1]["start_time"]
+        else:
+            end_time = segment["end_time"]
+
         extracted_text = extract_segment(transcript_file_data, start_time, end_time)
         extracted_segments.append(
             {
@@ -143,6 +151,7 @@ if __name__ == "__main__":
         #pprint.pprint(segment.get("text"))
         out_file_path = f"{time_file_base}_segment_{i:02d}.json"
         transcription = summarize_text(segment.get("text"))
+        #transcription = segment.get("text")
         #replaced_text = replace_words(transcription, replacement_dict)
         # 文字起こし結果をファイルに保存
         with open(out_file_path, "w", encoding="utf-8") as text_file:

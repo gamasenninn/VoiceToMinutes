@@ -10,9 +10,23 @@ load_dotenv()
 REPLACEMENT_DICT  = os.environ["REPLACEMENT_DICT"]
 title = "議事録（AI自動起草）\n"
 
+def remove_decimal_from_time(time_data):
+    """Remove the decimal part from the given time data."""
+    # Splitting the time data on '-'
+    start_time, end_time = time_data.split('-')
+
+    # Removing the decimal part
+    start_time = start_time.split('.')[0]
+    end_time = end_time.split('.')[0]
+
+    # Rejoining the time data
+    formatted_time_data = f"{start_time}-{end_time}"
+    return formatted_time_data
+
 def format_minute_item(item, replacement_dict):
     replaced_title = replace_words(item['title'], replacement_dict)
-    time_str = item['times']
+    #time_str = item['times']
+    time_str = remove_decimal_from_time(item['times'])
 
     # 'content' がリストの場合は結合して文字列にする
     if isinstance(item['contents'], list):
@@ -31,7 +45,8 @@ def format_minute_item(item, replacement_dict):
 
 def format_youtube_description(item, replacement_dict):
     replaced_title = replace_words(item['title'], replacement_dict)
-    time_str = item['times']
+    #time_str = item['times']
+    time_str = remove_decimal_from_time(item['times'])
 
     # 'content' がリストの場合は結合して文字列にする
     if isinstance(item['contents'], list):

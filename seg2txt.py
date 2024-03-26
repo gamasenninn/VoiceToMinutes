@@ -58,7 +58,7 @@ def process_files(time_file_path, transcript_file_path):
     num_segments = len(time_file_data["segments"])
     #for segment in time_file_data["segments"]:
     for i, segment in enumerate(time_file_data["segments"]):
-        start_time = segment["start_time"] 
+        start_time = segment["start_time"]
         #end_time = segment["end_time"]
         # Use next segment's start time as end time, except for the last segment
         if i < num_segments - 1:

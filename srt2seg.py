@@ -14,30 +14,39 @@ replacement_dict = load_replacement_dict(replacement_dict_path)
 
 #要約処理（openai API）
 def make_part(text):
- 
+    models = ["gpt-3.5-turbo", "gpt-4-turbo"]  # 利用するモデルのリスト
+    response = None 
 
-    response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo-0125",  # gpt-3.5-turbo-1106からの変更
-            #model="gpt-4-turbo-preview",
-            response_format={ "type": "json_object" },
-            messages=[
-                {
-                    "role": "system",
-                    "content": "次の記録から議事録を起こしていきます。"
-                                "議事の流れの中で、内容的に区切れる部分を探し、連続した時間で3分程度のパートに分割してください。記録を最後まで全部読んで最後の議事の最終時間になるまで出力してください。"
-                                "出力は下記のような配列としての純粋なJSON形式でお願いします。" 
-                                "{segments=[{"
-                                    "title:タイトル（20文字以内で内容に最も適したタイトル）," 
-                                    "start_time:この議題の開始時間(00:00:00)," 
-                                    "end_time:この議題の終了時間(00:00:00)" 
-                                "},]}"
-                },
-                {
-                    "role": "user",
-                    "content": text
-                }
-            ],
-        )
+    for model in models:
+        try:    
+            response = openai.ChatCompletion.create(
+                    #model="gpt-3.5-turbo",  # gpt-3.5-turbo-1106からの変更
+                    #model="gpt-4-turbo",
+                    model=model,
+                    response_format={ "type": "json_object" },
+                    messages=[
+                        {
+                            "role": "system",
+                            "content": "次の記録から議事録を起こしていきます。"
+                                        "議事の流れの中で、内容的に区切れる部分を探し、連続した時間で3分程度のパートに分割してください。記録を最後まで全部読んで最後の議事の最終時間になるまで出力してください。"
+                                        "出力は下記のような配列としての純粋なJSON形式でお願いします。" 
+                                        "{segments=[{"
+                                            "title:タイトル（20文字以内で内容に最も適したタイトル）," 
+                                            "start_time:この議題の開始時間(00:00:00)," 
+                                            "end_time:この議題の終了時間(00:00:00)" 
+                                        "},]}"
+                        },
+                        {
+                            "role": "user",
+                            "content": text
+                        }
+                    ],
+            )
+            print("model:",model)
+            break
+        except openai.error.InvalidRequestError as e:
+            if model == models[-1]:  # 最後のモデルで失敗した場合
+                raise e  # 最終的な例外を投げる
     # 要約されたテキストを取得
     new_summary = response.choices[0].message.content.strip()
 

@@ -14,7 +14,9 @@ replacement_dict = load_replacement_dict(replacement_dict_path)
 
 #要約処理（openai API）
 def make_part(text):
-    models = ["gpt-3.5-turbo", "gpt-4-turbo"]  # 利用するモデルのリスト
+    #models = ["gpt-3.5-turbo", "gpt-4-turbo"]  # 利用するモデルのリスト
+    models = ["gpt-3.5-turbo", "gpt-4o"]  # 利用するモデルのリスト
+    #models = ["gpt-4o"]  # gpt-4oのテスト
     response = None 
 
     for model in models:
